@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  import Tracker from './components/Tracker.vue'
+import Settings from './components/Settings.vue';
 </script>
 
 <template>
-  <Tracker />
+  <Settings />
 </template>
