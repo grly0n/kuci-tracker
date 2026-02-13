@@ -45,6 +45,8 @@ watchEffect(() => {
     chart?.destroy()
     initChart()
     graphArray(dataPoints.slice(-updateEvents, -1))
+    // Re-calculate statistics for the current event window
+    emitData()
   }
 })
 
@@ -70,6 +72,7 @@ function graphSingleValue(value: number): void {
   chart?.update()
 }
 
+// Adds an array of points to the graph (used when changing max events)
 function graphArray(values: number[]): void {
   for (const value of values) {
     graphSingleValue(value)
@@ -84,9 +87,11 @@ async function graphValue() {
   const listenerCount = getRandomValue()
   dataPoints.push(listenerCount)
   graphSingleValue(listenerCount)
+  emitData()
+}
 
-
-  // Emit data to Settings for live statistics
+// Emit data currently graphed to Settings for statistics
+function emitData(): void {
   const rawData = chart?.data.datasets[0]?.data
   if (rawData) {
     const cleanData: number[] = rawData.filter((item): item is number => {
