@@ -21,12 +21,10 @@ const lowestValue = ref<number>(Number.MAX_SAFE_INTEGER)
 
 // Compute statistics from current data
 function computeStatistics(numbers: number[]) {
-  console.log(numbers)
   if (numbers.length === 0) averageValue.value = '0.00'
   const sum = numbers.reduce((a, b) => a + b, 0)
   highestValue.value = Math.max(highestValue.value, Math.max(...numbers))
   lowestValue.value = Math.min(lowestValue.value, Math.min(...numbers))
-  console.log(`Average listeners: ${sum / numbers.length}`)
   averageValue.value = (sum / numbers.length).toFixed(2)
 }
 
