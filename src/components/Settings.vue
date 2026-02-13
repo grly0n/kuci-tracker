@@ -108,7 +108,27 @@ const toggleMenu = () => { isOpen.value = !isOpen.value; };
             </div>
           </div>
         </section>
+
+        <hr class="border-gray-700">
+
+        <section class="bg-gray-900/50 p-4 rounded-xl border border-gray-700">
+          <h3 class="text-xs font-semibold text-gray-400 uppercase mb-4">Links</h3>
+          <div class="space-y-3">
+            <div class="flex flex-row gap-4">
+              <a href="https://kuci.org/wp/" title="KUCI Irvine" target="_blank">
+                <img src="@/assets/kuci.ico" width="24" height="24">
+              </a>
+              <a href="https://streamer.kuci.org" title="Icecast Streamer" target="_blank">
+                <img src="@/assets/icecast.png" width="24" height="24">
+              </a>
+              <a href="https://github.com" title="Github" target="_blank">
+                <img src="@/assets/github-142-svgrepo-com.svg" width="24" height="24">
+              </a>
+            </div>
+          </div>
+        </section>
       </div>
+
 
       <div v-else class="flex flex-col items-center py-6 space-y-8">
         <span title="Frequency" class="text-xl opacity-50">⏱️</span>
