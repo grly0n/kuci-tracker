@@ -22,17 +22,32 @@ Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryS
 
 const canvas = useTemplateRef("chartCanvas")
 let chart: Chart | null = null
+let dataPoints: number[] = []
 let intervalId: number | undefined
 let updateFreq: number | undefined
 let updateEvents: number | undefined
 
+
+// Listeners for prop changes
 watchEffect(() => {
-  console.log(`Chart initialized with update frequency of ${props.frequency} seconds`)
-  if (props.frequency) changeFreq(props.frequency)
-  if (props.maxEvents) updateEvents = props.maxEvents
-  chart?.destroy()
-  initChart()
-  graphValue()
+  // Update frequency
+  if (props.frequency && props.frequency !== updateFreq) {
+    console.log(`Updated frequency to ${props.frequency} seconds`)
+    changeFreq(props.frequency)
+    chart?.destroy()
+    initChart()
+    graphValue()
+  }
+  // Max events
+  if (props.maxEvents && props.maxEvents !== updateEvents) {
+    console.log(`Updated max events to ${props.maxEvents}`)
+    updateEvents = props.maxEvents
+    chart?.destroy()
+    initChart()
+    graphArray(dataPoints.slice(-updateEvents, -1))
+    // Re-calculate statistics for the current event window
+    emitData()
+  }
 })
 
 
@@ -41,28 +56,44 @@ function changeFreq(freq: number): void {
   updateFreq = freq
   if (intervalId) clearInterval(intervalId)
   intervalId = window.setInterval(graphValue, updateFreq * 1000)
-  if (chart && chart.data.datasets[0]) {
-    chart.data.datasets[0].data = []
-  }
-  // graphValue()
-  // chart?.update()
-  chart?.data.datasets[0]?.data.splice(0, chart?.data.datasets[0]?.data.length)
+  dataPoints.splice(0, dataPoints.length)
 }
+
+
+// Adds a single point to the graph
+function graphSingleValue(value: number): void {
+  const now = new Date().toLocaleTimeString()
+  chart?.data.datasets[0]?.data.push(value)
+  chart?.data.labels?.push(now)
+  const length = chart?.data.datasets[0]?.data.length as number
+  if (updateEvents && length > Number(updateEvents)) {
+    chart?.data.labels?.shift()
+    chart?.data.datasets[0]?.data.shift()
+  }
+  chart?.update()
+}
+
+
+// Adds an array of points to the graph (used when changing max events)
+function graphArray(values: number[]): void {
+  for (const value of values) {
+    graphSingleValue(value)
+  }
+}
+
 
 // Plot point on graph
 async function graphValue() {
   if (!chart) return
-  const now = new Date().toLocaleTimeString()
-  chart.data.labels?.push(now)
   const listenerCount = await getListenerCount() as number
-  chart.data.datasets[0]?.data.push(listenerCount)
-  const length = chart.data.datasets[0]?.data.length as number
-  if (updateEvents && length > updateEvents) {
-    chart.data.labels?.shift()
-    chart.data.datasets[0]?.data.shift()
-  }
-  chart?.update()
+  dataPoints.push(listenerCount)
+  graphSingleValue(listenerCount)
+  emitData()
+}
 
+
+// Emit data currently graphed to Settings for statistics
+function emitData(): void {
   const rawData = chart?.data.datasets[0]?.data
   if (rawData) {
     const cleanData: number[] = rawData.filter((item): item is number => {
@@ -71,6 +102,7 @@ async function graphValue() {
     emit('data-update', cleanData)
   }
 }
+
 
 // Initialize chart
 function initChart() {
@@ -117,6 +149,7 @@ onMounted(() => {
   initChart()
 })
 
+// When canvas is unmounted, clear interval and destroy graph
 onBeforeUnmount(() => {
   if (intervalId) clearInterval(intervalId)
   chart?.destroy()

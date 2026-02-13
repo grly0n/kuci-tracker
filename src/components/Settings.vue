@@ -19,16 +19,16 @@ const averageValue = ref<string>('');
 const highestValue = ref<number>(0);
 const lowestValue = ref<number>(Number.MAX_SAFE_INTEGER)
 
+
 // Compute statistics from current data
 function computeStatistics(numbers: number[]) {
-  console.log(numbers)
   if (numbers.length === 0) averageValue.value = '0.00'
   const sum = numbers.reduce((a, b) => a + b, 0)
   highestValue.value = Math.max(highestValue.value, Math.max(...numbers))
   lowestValue.value = Math.min(lowestValue.value, Math.min(...numbers))
-  console.log(`Average listeners: ${sum / numbers.length}`)
   averageValue.value = (sum / numbers.length).toFixed(2)
 }
+
 
 // Dropdown Options
 const frequencyOptions = [
@@ -49,7 +49,7 @@ const toggleMenu = () => { isOpen.value = !isOpen.value; };
       isOpen ? 'w-80' : 'w-20'
     ]">
       <div class="p-6 flex items-center justify-between border-b border-gray-700">
-        <h2 v-if="isOpen" class="font-bold text-xl tracking-tight transition-all">Controls</h2>
+        <h2 v-if="isOpen" class="font-bold text-xl tracking-tight transition-all">Settings & Statistics</h2>
         <button @click="toggleMenu" class="p-2 hover:bg-gray-700 rounded-lg transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
@@ -76,6 +76,9 @@ const toggleMenu = () => { isOpen.value = !isOpen.value; };
               </svg>
             </div>
           </div>
+          <label class="block text-xs font-semibold text-red-400 uppercase tracking-wider mt-2">
+            Warning: will reset graph data
+          </label>
         </section>
 
         <section>
@@ -105,7 +108,27 @@ const toggleMenu = () => { isOpen.value = !isOpen.value; };
             </div>
           </div>
         </section>
+
+        <hr class="border-gray-700">
+
+        <section class="bg-gray-900/50 p-4 rounded-xl border border-gray-700">
+          <h3 class="text-xs font-semibold text-gray-400 uppercase mb-4">Links</h3>
+          <div class="space-y-3">
+            <div class="flex flex-row gap-4">
+              <a href="https://kuci.org/wp/" title="KUCI Irvine" target="_blank">
+                <img src="@/assets/kuci.ico" width="24" height="24">
+              </a>
+              <a href="https://streamer.kuci.org" title="Icecast Streamer" target="_blank">
+                <img src="@/assets/icecast.png" width="24" height="24">
+              </a>
+              <a href="https://github.com" title="Github" target="_blank">
+                <img src="@/assets/github-142-svgrepo-com.svg" width="24" height="24">
+              </a>
+            </div>
+          </div>
+        </section>
       </div>
+
 
       <div v-else class="flex flex-col items-center py-6 space-y-8">
         <span title="Frequency" class="text-xl opacity-50">⏱️</span>
@@ -116,7 +139,7 @@ const toggleMenu = () => { isOpen.value = !isOpen.value; };
 
     <main class="flex-1 min-w-0 p-12 relative">
       <div class="h-full w-full">
-        <Tracker :frequency="settings.updateFrequency" :max-events="settings.maxEvents"
+        <Tracker :frequency="settings.updateFrequency" :max-events="settings.maxEvents || 0"
           @data-update="computeStatistics" />
       </div>
     </main>
