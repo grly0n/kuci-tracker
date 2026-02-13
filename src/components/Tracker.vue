@@ -7,7 +7,6 @@ import { useTemplateRef, onMounted, onBeforeUnmount, watchEffect } from 'vue'
 import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend } from 'chart.js';
 import { getListenerCount } from '../utils/api.ts';
 import 'chartjs-adapter-date-fns'
-import { getRandomValue } from '../utils/random.ts';
 
 
 const props = defineProps({
@@ -86,8 +85,7 @@ function graphArray(values: number[]): void {
 // Plot point on graph
 async function graphValue() {
   if (!chart) return
-  // const listenerCount = await getListenerCount() as number
-  const listenerCount = getRandomValue()
+  const listenerCount = await getListenerCount() as number
   dataPoints.push(listenerCount)
   graphSingleValue(listenerCount)
   emitData()
