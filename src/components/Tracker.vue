@@ -147,6 +147,7 @@ function initChart() {
 // When canvas is mounted, initialize graph and update loop
 onMounted(() => {
   initChart()
+  graphValue()
 })
 
 // When canvas is unmounted, clear interval and destroy graph
