@@ -121,7 +121,7 @@ const toggleMenu = () => { isOpen.value = !isOpen.value; };
               <a href="https://streamer.kuci.org" title="Icecast Streamer" target="_blank">
                 <img src="@/assets/icecast.png" width="24" height="24">
               </a>
-              <a href="https://github.com" title="Github" target="_blank">
+              <a href="https://github.com/grly0n/kuci-tracker" title="Github" target="_blank">
                 <img src="@/assets/github-142-svgrepo-com.svg" width="24" height="24">
               </a>
             </div>
