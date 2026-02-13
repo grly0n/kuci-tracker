@@ -28,6 +28,7 @@ let intervalId: number | undefined
 let updateFreq: number | undefined
 let updateEvents: number | undefined
 
+
 // Listeners for prop changes
 watchEffect(() => {
   // Update frequency
@@ -59,6 +60,7 @@ function changeFreq(freq: number): void {
   dataPoints.splice(0, dataPoints.length)
 }
 
+
 // Adds a single point to the graph
 function graphSingleValue(value: number): void {
   const now = new Date().toLocaleTimeString()
@@ -71,6 +73,7 @@ function graphSingleValue(value: number): void {
   }
   chart?.update()
 }
+
 
 // Adds an array of points to the graph (used when changing max events)
 function graphArray(values: number[]): void {
@@ -90,6 +93,7 @@ async function graphValue() {
   emitData()
 }
 
+
 // Emit data currently graphed to Settings for statistics
 function emitData(): void {
   const rawData = chart?.data.datasets[0]?.data
@@ -100,6 +104,7 @@ function emitData(): void {
     emit('data-update', cleanData)
   }
 }
+
 
 // Initialize chart
 function initChart() {
@@ -146,6 +151,7 @@ onMounted(() => {
   initChart()
 })
 
+// When canvas is unmounted, clear interval and destroy graph
 onBeforeUnmount(() => {
   if (intervalId) clearInterval(intervalId)
   chart?.destroy()

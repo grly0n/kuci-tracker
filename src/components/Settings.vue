@@ -19,6 +19,7 @@ const averageValue = ref<string>('');
 const highestValue = ref<number>(0);
 const lowestValue = ref<number>(Number.MAX_SAFE_INTEGER)
 
+
 // Compute statistics from current data
 function computeStatistics(numbers: number[]) {
   if (numbers.length === 0) averageValue.value = '0.00'
@@ -27,6 +28,7 @@ function computeStatistics(numbers: number[]) {
   lowestValue.value = Math.min(lowestValue.value, Math.min(...numbers))
   averageValue.value = (sum / numbers.length).toFixed(2)
 }
+
 
 // Dropdown Options
 const frequencyOptions = [
@@ -47,7 +49,7 @@ const toggleMenu = () => { isOpen.value = !isOpen.value; };
       isOpen ? 'w-80' : 'w-20'
     ]">
       <div class="p-6 flex items-center justify-between border-b border-gray-700">
-        <h2 v-if="isOpen" class="font-bold text-xl tracking-tight transition-all">Controls</h2>
+        <h2 v-if="isOpen" class="font-bold text-xl tracking-tight transition-all">Settings & Statistics</h2>
         <button @click="toggleMenu" class="p-2 hover:bg-gray-700 rounded-lg transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
@@ -74,6 +76,9 @@ const toggleMenu = () => { isOpen.value = !isOpen.value; };
               </svg>
             </div>
           </div>
+          <label class="block text-xs font-semibold text-red-400 uppercase tracking-wider mt-2">
+            Warning: will reset graph data
+          </label>
         </section>
 
         <section>
