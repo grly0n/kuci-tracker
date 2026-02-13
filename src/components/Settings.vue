@@ -114,7 +114,7 @@ const toggleMenu = () => { isOpen.value = !isOpen.value; };
 
     <main class="flex-1 min-w-0 p-12 relative">
       <div class="h-full w-full">
-        <Tracker :frequency="settings.updateFrequency" :max-events="settings.maxEvents"
+        <Tracker :frequency="settings.updateFrequency" :max-events="settings.maxEvents || 0"
           @data-update="computeStatistics" />
       </div>
     </main>

@@ -55,7 +55,6 @@ function changeFreq(freq: number): void {
   if (intervalId) clearInterval(intervalId)
   intervalId = window.setInterval(graphValue, updateFreq * 1000)
   dataPoints.splice(0, dataPoints.length)
-  // chart?.data.datasets[0]?.data.splice(0, chart?.data.datasets[0]?.data.length)
 }
 
 // Adds a single point to the graph
