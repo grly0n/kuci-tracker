@@ -32,11 +32,12 @@ function computeStatistics(numbers: number[]) {
 
 // Dropdown Options
 const frequencyOptions = [
-  { label: '1 Second', value: 1 },
   { label: '5 Seconds', value: 5 },
   { label: '10 Seconds', value: 10 },
   { label: '30 Seconds', value: 30 },
   { label: '1 Minute', value: 60 },
+  { label: '3 Minutes', value: 180 },
+  { label: '5 Minutes', value: 300 }
 ];
 
 const toggleMenu = () => { isOpen.value = !isOpen.value; };
