@@ -32,11 +32,12 @@ function computeStatistics(numbers: number[]) {
 
 // Dropdown Options
 const frequencyOptions = [
-  { label: '1 Second', value: 1 },
   { label: '5 Seconds', value: 5 },
   { label: '10 Seconds', value: 10 },
   { label: '30 Seconds', value: 30 },
   { label: '1 Minute', value: 60 },
+  { label: '3 Minutes', value: 180 },
+  { label: '5 Minutes', value: 300 }
 ];
 
 const toggleMenu = () => { isOpen.value = !isOpen.value; };
@@ -121,7 +122,7 @@ const toggleMenu = () => { isOpen.value = !isOpen.value; };
               <a href="https://streamer.kuci.org" title="Icecast Streamer" target="_blank">
                 <img src="@/assets/icecast.png" width="24" height="24">
               </a>
-              <a href="https://github.com" title="Github" target="_blank">
+              <a href="https://github.com/grly0n/kuci-tracker" title="Github" target="_blank">
                 <img src="@/assets/github-142-svgrepo-com.svg" width="24" height="24">
               </a>
             </div>
