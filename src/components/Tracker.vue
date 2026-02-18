@@ -23,6 +23,7 @@ Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryS
 const canvas = useTemplateRef("chartCanvas")
 let chart: Chart | null = null
 let dataPoints: number[] = []
+let dataLabels: string[] = []
 let intervalId: number | undefined
 let updateFreq: number | undefined
 let updateEvents: number | undefined
@@ -32,7 +33,6 @@ let updateEvents: number | undefined
 watchEffect(() => {
   // Update frequency
   if (props.frequency && props.frequency !== updateFreq) {
-    console.log(`Updated frequency to ${props.frequency} seconds`)
     changeFreq(props.frequency)
     chart?.destroy()
     initChart()
@@ -40,11 +40,10 @@ watchEffect(() => {
   }
   // Max events
   if (props.maxEvents && props.maxEvents !== updateEvents) {
-    console.log(`Updated max events to ${props.maxEvents}`)
     updateEvents = props.maxEvents
     chart?.destroy()
     initChart()
-    graphArray(dataPoints.slice(-updateEvents, -1))
+    graphArray(dataPoints.slice(-updateEvents, -1), dataLabels.slice(-updateEvents, -1))
     // Re-calculate statistics for the current event window
     emitData()
   }
@@ -61,10 +60,10 @@ function changeFreq(freq: number): void {
 
 
 // Adds a single point to the graph
-function graphSingleValue(value: number): void {
-  const now = new Date().toLocaleTimeString()
+function graphSingleValue(value: number, timestamp: string | null = null): void {
+  if (!timestamp) timestamp = new Date().toLocaleTimeString()
   chart?.data.datasets[0]?.data.push(value)
-  chart?.data.labels?.push(now)
+  chart?.data.labels?.push(timestamp)
   const length = chart?.data.datasets[0]?.data.length as number
   if (updateEvents && length > Number(updateEvents)) {
     chart?.data.labels?.shift()
@@ -75,9 +74,12 @@ function graphSingleValue(value: number): void {
 
 
 // Adds an array of points to the graph (used when changing max events)
-function graphArray(values: number[]): void {
-  for (const value of values) {
-    graphSingleValue(value)
+function graphArray(values: number[], labels: string[]): void {
+  for (let i = 0; i < values.length; i++) {
+    const value = values[i]
+    if (value) {
+      graphSingleValue(value, labels[i])
+    }
   }
 }
 
@@ -86,8 +88,10 @@ function graphArray(values: number[]): void {
 async function graphValue() {
   if (!chart) return
   const listenerCount = await getListenerCount() as number
+  const timestamp = new Date().toLocaleTimeString()
   dataPoints.push(listenerCount)
-  graphSingleValue(listenerCount)
+  dataLabels.push(timestamp)
+  graphSingleValue(listenerCount, timestamp)
   emitData()
 }
 
